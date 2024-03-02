@@ -37,7 +37,7 @@ public class CustomDataSource implements DataSource {
     @Override
     public Connection getConnection() {
         CustomConnector customConnector = new CustomConnector();
-        return customConnector.getConnection(url, name, password);
+        return customConnector.getConnection(instance.url, instance.name, instance.password);
     }
 
     @Override
