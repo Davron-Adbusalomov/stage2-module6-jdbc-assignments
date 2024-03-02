@@ -15,8 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleJDBCRepository {
-    CustomConnector customConnector = getCustomConnector();
-
     CustomDataSource customDataSource = CustomDataSource.getInstance();
 
     private Connection connection = null;
