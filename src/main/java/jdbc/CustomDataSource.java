@@ -20,7 +20,7 @@ public class CustomDataSource implements DataSource {
     private final String name;
     private final String password;
 
-    private CustomDataSource(String driver, String url, String name, String password) {
+    private CustomDataSource(String driver, String url, String password, String name) {
         this.driver=driver;
         this.url = url;
         this.name = name;
@@ -29,10 +29,11 @@ public class CustomDataSource implements DataSource {
 
     public static CustomDataSource getInstance() {
         if (instance==null){
-            instance = new CustomDataSource("org.postgresql.Driver","jdbc:postgresql://localhost:5432/myfirstdb","postgres","55555");
+            instance = new CustomDataSource("org.postgresql.Driver","jdbc:postgresql://localhost:5432/myfirstdb","55555","postgres");
         }
         return instance;
     }
+
 
     @Override
     public Connection getConnection() {

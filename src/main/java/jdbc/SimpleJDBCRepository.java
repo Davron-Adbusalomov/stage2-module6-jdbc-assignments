@@ -21,7 +21,7 @@ public class SimpleJDBCRepository {
     private PreparedStatement ps = null;
     private Statement st = null;
 
-    private static final String createUserSQL = "INSERT INTO myusers (firstname, lastname, age) values(?,?,?)";
+    private static final String createUserSQL = "INSERT INTO myusers (id, firstname, lastname, age) values(?,?,?,?)";
     private static final String updateUserSQL = "UPDATE myusers set firstname = ?, lastname=?, age=? where id = ?";
     private static final String deleteUser = "DELETE FROM myusers where id = ?";
     private static final String findUserByIdSQL = "SELECT * FROM myusers where id = ?";
@@ -32,9 +32,10 @@ public class SimpleJDBCRepository {
         try {
         connection = customDataSource.getConnection();
         ps = connection.prepareStatement(createUserSQL, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, user.getFirstName());
-        ps.setString(2, user.getLastName());
-        ps.setInt(3, user.getAge());
+        ps.setLong(1, user.getId());
+        ps.setString(2, user.getFirstName());
+        ps.setString(3, user.getLastName());
+        ps.setInt(4, user.getAge());
         ps.executeUpdate();
 
         ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -176,4 +177,15 @@ public class SimpleJDBCRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public static void main(String[] args) {
+       User user = new User(3L, "Davron", "Abdusalomov", 20);
+        SimpleJDBCRepository simpleJDBCRepository = new SimpleJDBCRepository();
+        System.out.println(simpleJDBCRepository.createUser(user));
+        System.out.println(simpleJDBCRepository.findUserById(1L));
+        System.out.println(simpleJDBCRepository.findAllUser());
+        System.out.println(simpleJDBCRepository.updateUser(user));
+
+    }
+
 }
