@@ -128,7 +128,7 @@ public class SimpleJDBCRepository {
         }
         return null;
     }
-    private void deleteUser(Long userId) throws SQLException {
+    public void deleteUser(Long userId) throws SQLException {
         try {
             connection = customDataSource.getConnection();
             ps = connection.prepareStatement(deleteUser);
@@ -142,7 +142,7 @@ public class SimpleJDBCRepository {
         }
     }
 
-    private User mapResultsetToUser(ResultSet rs) throws SQLException {
+    public User mapResultsetToUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getLong("id"),
                 rs.getString("firstname"),
