@@ -30,7 +30,7 @@ public class SimpleJDBCRepository {
     private static final String findUserByNameSQL = "SELECT * FROM myusers where firstname = ?";
     private static final String findAllUserSQL = "SELECT * FROM myusers";
 
-    public Long createUser(User user) throws SQLException {
+    public Long createUser(User user) {
         try {
         connection = customDataSource.getConnection();
         ps = connection.prepareStatement(createUserSQL, Statement.RETURN_GENERATED_KEYS);
@@ -46,12 +46,16 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
             return null;
     }
 
-    public User findUserById(Long userId) throws SQLException {
+    public User findUserById(Long userId){
         try {
             connection = customDataSource.getConnection();
             ps = connection.prepareStatement(findUserByIdSQL);
@@ -65,12 +69,16 @@ public class SimpleJDBCRepository {
         }catch (SQLException e){
             e.printStackTrace();
         }finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
 
-    public User findUserByName(String userName) throws SQLException {
+    public User findUserByName(String userName) {
         try {
             connection = customDataSource.getConnection();
             ps = connection.prepareStatement(findUserByNameSQL);
@@ -84,12 +92,16 @@ public class SimpleJDBCRepository {
             e.printStackTrace();
         }
         finally {
-        connection.close();
-    }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return null;
     }
 
-    public List<User> findAllUser() throws SQLException {
+    public List<User> findAllUser() {
         List<User> userList = new ArrayList<>();
         try {
             connection = customDataSource.getConnection();
@@ -103,12 +115,16 @@ public class SimpleJDBCRepository {
         }catch (SQLException e){
             e.printStackTrace();
         }finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return userList;
     }
 
-    public User updateUser(User user) throws SQLException {
+    public User updateUser(User user) {
         try {
             connection = customDataSource.getConnection();
             ps = connection.prepareStatement(updateUserSQL);
@@ -124,11 +140,15 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
-    public void deleteUser(Long userId) throws SQLException {
+    public void deleteUser(Long userId) {
         try {
             connection = customDataSource.getConnection();
             ps = connection.prepareStatement(deleteUser);
@@ -138,16 +158,24 @@ public class SimpleJDBCRepository {
         }catch (SQLException e){
             e.printStackTrace();
         }finally {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public User mapResultsetToUser(ResultSet rs) throws SQLException {
-        return new User(
-                rs.getLong("id"),
-                rs.getString("firstname"),
-                rs.getString("lastname"),
-                rs.getInt("age")
-        );
+    public User mapResultsetToUser(ResultSet rs) {
+        try {
+            return new User(
+                    rs.getLong("id"),
+                    rs.getString("firstname"),
+                    rs.getString("lastname"),
+                    rs.getInt("age")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

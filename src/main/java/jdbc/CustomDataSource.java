@@ -35,13 +35,9 @@ public class CustomDataSource implements DataSource {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         CustomConnector customConnector = new CustomConnector();
-        try {
-            return customConnector.getConnection(url, name, password);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        return customConnector.getConnection(url, name, password);
     }
 
     @Override
