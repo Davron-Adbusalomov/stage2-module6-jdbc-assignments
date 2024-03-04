@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 @Getter
@@ -31,34 +33,30 @@ public class CustomDataSource implements DataSource {
     }
 
     public static CustomDataSource getInstance() {
-        if (instance==null){
-            Properties properties = new Properties();
-            try (InputStream input = CustomDataSource.class.getClassLoader().getResourceAsStream("app.properties")) {
-                properties.load(input);
-                instance = new CustomDataSource(
-                        properties.getProperty("postgres.driver"),
-                        properties.getProperty("postgres.url"),
-                        properties.getProperty("postgres.password"),
-                        properties.getProperty("postgres.name")
-                );
-                return instance;
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to load configuration.", e);
-            }
+        if (instance == null) {
+            ResourceBundle rb = ResourceBundle.getBundle("app");
+            instance = new CustomDataSource(rb.getString("postgres.driver"),
+                    rb.getString("postgres.url"),
+                    rb.getString("postgres.password"),
+                    rb.getString("postgres.name"));
         }
         return instance;
     }
 
 
     @Override
-    public Connection getConnection() {
-        CustomConnector customConnector = new CustomConnector();
-        return customConnector.getConnection(instance.url, instance.name, instance.password);
+    public Connection getConnection() throws SQLException {
+        return getConnection(name, password);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return null;
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return DriverManager.getConnection(url, username, password);
     }
 
     @Override
