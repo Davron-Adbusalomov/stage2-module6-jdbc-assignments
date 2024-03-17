@@ -5,14 +5,11 @@ import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -25,8 +22,9 @@ public class CustomDataSource implements DataSource {
     private final String name;
     private final String password;
 
-    private CustomDataSource(String driver, String url, String password, String name) {
-        this.driver=driver;
+    private CustomDataSource(String driver, String url, String password,
+                             String name) {
+        this.driver = driver;
         this.url = url;
         this.name = name;
         this.password = password;
@@ -42,7 +40,6 @@ public class CustomDataSource implements DataSource {
         }
         return instance;
     }
-
 
     @Override
     public Connection getConnection() throws SQLException {
@@ -70,13 +67,13 @@ public class CustomDataSource implements DataSource {
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-
+    public int getLoginTimeout() throws SQLException {
+        return 0;
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        return 0;
+    public void setLoginTimeout(int seconds) throws SQLException {
+
     }
 
     @Override
